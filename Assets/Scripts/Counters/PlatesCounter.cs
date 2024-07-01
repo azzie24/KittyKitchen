@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatesCounter : BaseCounter {
+public class PlatesCounter : BaseCounter
+{
 
 
     public event EventHandler OnPlateSpawned;
@@ -19,12 +18,15 @@ public class PlatesCounter : BaseCounter {
     private int platesSpawnedAmountMax = 4;
 
 
-    private void Update() {
+    private void Update()
+    {
         spawnPlateTimer += Time.deltaTime;
-        if (spawnPlateTimer > spawnPlateTimerMax) {
+        if (spawnPlateTimer > spawnPlateTimerMax)
+        {
             spawnPlateTimer = 0f;
 
-            if (KitchenGameManager.Instance.IsGamePlaying() && platesSpawnedAmount < platesSpawnedAmountMax) {
+            if (KitchenGameManager.Instance.IsGamePlaying() && platesSpawnedAmount < platesSpawnedAmountMax)
+            {
                 platesSpawnedAmount++;
 
                 OnPlateSpawned?.Invoke(this, EventArgs.Empty);
@@ -32,11 +34,12 @@ public class PlatesCounter : BaseCounter {
         }
     }
 
-    public override void Interact(Player player) {
-        if (!player.HasKitchenObject()) {
-            // Player is empty handed
-            if (platesSpawnedAmount > 0) {
-                // There's at least one plate here
+    public override void Interact(Player player)
+    {
+        if (!player.HasKitchenObject())
+        {
+            if (platesSpawnedAmount > 0)
+            {
                 platesSpawnedAmount--;
 
                 KitchenObject.SpawnKitchenObject(plateKitchenObjectSO, player);

@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeliveryManager : MonoBehaviour {
+public class DeliveryManager : MonoBehaviour
+{
 
 
     public event EventHandler OnRecipeSpawned;
@@ -25,19 +25,23 @@ public class DeliveryManager : MonoBehaviour {
     private int successfulRecipesAmount;
 
 
-    private void Awake() {
+    private void Awake()
+    {
         Instance = this;
 
 
         waitingRecipeSOList = new List<RecipeSO>();
     }
 
-    private void Update() {
+    private void Update()
+    {
         spawnRecipeTimer -= Time.deltaTime;
-        if (spawnRecipeTimer <= 0f) {
+        if (spawnRecipeTimer <= 0f)
+        {
             spawnRecipeTimer = spawnRecipeTimerMax;
 
-            if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < waitingRecipesMax) {
+            if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < waitingRecipesMax)
+            {
                 RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
 
                 waitingRecipeSOList.Add(waitingRecipeSO);
@@ -47,32 +51,34 @@ public class DeliveryManager : MonoBehaviour {
         }
     }
 
-    public void DeliverRecipe(PlateKitchenObject plateKitchenObject) {
-        for (int i = 0; i < waitingRecipeSOList.Count; i++) {
+    public void DeliverRecipe(PlateKitchenObject plateKitchenObject)
+    {
+        for (int i = 0; i < waitingRecipeSOList.Count; i++)
+        {
             RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
 
-            if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count) {
-                // Has the same number of ingredients
+            if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
+            {
                 bool plateContentsMatchesRecipe = true;
-                foreach (KitchenObjectSO recipeKitchenObjectSO in waitingRecipeSO.kitchenObjectSOList) {
-                    // Cycling through all ingredients in the Recipe
+                foreach (KitchenObjectSO recipeKitchenObjectSO in waitingRecipeSO.kitchenObjectSOList)
+                {
                     bool ingredientFound = false;
-                    foreach (KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList()) {
-                        // Cycling through all ingredients in the Plate
-                        if (plateKitchenObjectSO == recipeKitchenObjectSO) {
-                            // Ingredient matches!
+                    foreach (KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
+                    {
+                        if (plateKitchenObjectSO == recipeKitchenObjectSO)
+                        {
                             ingredientFound = true;
                             break;
                         }
                     }
-                    if (!ingredientFound) {
-                        // This Recipe ingredient was not found on the Plate
+                    if (!ingredientFound)
+                    {
                         plateContentsMatchesRecipe = false;
                     }
                 }
 
-                if (plateContentsMatchesRecipe) {
-                    // Player delivered the correct recipe!
+                if (plateContentsMatchesRecipe)
+                {
 
                     successfulRecipesAmount++;
 
@@ -85,16 +91,16 @@ public class DeliveryManager : MonoBehaviour {
             }
         }
 
-        // No matches found!
-        // Player did not deliver a correct recipe
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
     }
 
-    public List<RecipeSO> GetWaitingRecipeSOList() {
+    public List<RecipeSO> GetWaitingRecipeSOList()
+    {
         return waitingRecipeSOList;
     }
 
-    public int GetSuccessfulRecipesAmount() {
+    public int GetSuccessfulRecipesAmount()
+    {
         return successfulRecipesAmount;
     }
 

@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class KitchenObject : MonoBehaviour {
+public class KitchenObject : MonoBehaviour
+{
 
 
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
@@ -11,18 +10,22 @@ public class KitchenObject : MonoBehaviour {
     private IKitchenObjectParent kitchenObjectParent;
 
 
-    public KitchenObjectSO GetKitchenObjectSO() {
+    public KitchenObjectSO GetKitchenObjectSO()
+    {
         return kitchenObjectSO;
     }
 
-    public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent) {
-        if (this.kitchenObjectParent != null) {
+    public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
+    {
+        if (this.kitchenObjectParent != null)
+        {
             this.kitchenObjectParent.ClearKitchenObject();
         }
 
         this.kitchenObjectParent = kitchenObjectParent;
 
-        if (kitchenObjectParent.HasKitchenObject()) {
+        if (kitchenObjectParent.HasKitchenObject())
+        {
             Debug.LogError("IKitchenObjectParent already has a KitchenObject!");
         }
 
@@ -32,21 +35,27 @@ public class KitchenObject : MonoBehaviour {
         transform.localPosition = Vector3.zero;
     }
 
-    public IKitchenObjectParent GetKitchenObjectParent() {
+    public IKitchenObjectParent GetKitchenObjectParent()
+    {
         return kitchenObjectParent;
     }
 
-    public void DestroySelf() {
+    public void DestroySelf()
+    {
         kitchenObjectParent.ClearKitchenObject();
 
         Destroy(gameObject);
     }
 
-    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject) {
-        if (this is PlateKitchenObject) {
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
+    {
+        if (this is PlateKitchenObject)
+        {
             plateKitchenObject = this as PlateKitchenObject;
             return true;
-        } else {
+        }
+        else
+        {
             plateKitchenObject = null;
             return false;
         }
@@ -54,11 +63,12 @@ public class KitchenObject : MonoBehaviour {
 
 
 
-    public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent) {
+    public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
+    {
         Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
 
         KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
-        
+
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
 
         return kitchenObject;
