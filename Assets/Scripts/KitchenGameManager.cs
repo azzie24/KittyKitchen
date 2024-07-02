@@ -73,15 +73,15 @@ public class KitchenGameManager : MonoBehaviour
                 }
                 break;
             case State.GamePlaying:
-                gamePlayingTimer += Time.deltaTime;// there was -
+                gamePlayingTimer -= Time.deltaTime;// there was -
                 if (gamePlayingTimer < 0f)
                 {
                     state = State.GameOver;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 break;
-                //case State.GameOver:
-                //    break;
+            case State.GameOver:
+                break;
         }
     }
 
