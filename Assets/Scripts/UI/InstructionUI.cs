@@ -1,22 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InstructionUI : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
-        
         Show();
     }
 
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+
         // Check if the "E" key is pressed
         if (Input.GetKeyDown(KeyCode.E))
         {
             // Call the Hide method to close the UI
+
             Hide();
         }
     }

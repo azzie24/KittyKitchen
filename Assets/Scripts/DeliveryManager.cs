@@ -21,7 +21,7 @@ public class DeliveryManager : MonoBehaviour
     private List<RecipeSO> waitingRecipeSOList;
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4f;
-    private int waitingRecipesMax = 4;
+    private int waitingRecipesMax = 5;
     private int successfulRecipesAmount;
 
 
@@ -47,7 +47,10 @@ public class DeliveryManager : MonoBehaviour
                 waitingRecipeSOList.Add(waitingRecipeSO);
 
                 OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
+
+                waitingRecipesMax--;
             }
+
         }
     }
 
