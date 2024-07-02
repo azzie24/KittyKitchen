@@ -7,12 +7,27 @@ public class InstructionUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        UpdateVisual();
+
+        Show();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        // Check if the "E" key is pressed
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            // Call the Hide method to close the UI
+            Hide();
+        }
+    }
+    private void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    private void Hide()
+    {
+        gameObject.SetActive(false);
     }
 }
