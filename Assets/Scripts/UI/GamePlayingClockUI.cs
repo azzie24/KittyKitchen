@@ -1,17 +1,40 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GamePlayingClockUI : MonoBehaviour 
+namespace Tim
 {
-
-
-    [SerializeField] private Image timerImage;
-
-
-    private void Update() 
+    public class GamePlayingClockUI : MonoBehaviour
     {
-        timerImage.fillAmount = KitchenGameManager.Instance.GetGamePlayingTimerNormalized();
+        [SerializeField] private Text timeText;
+
+        private float currentTime = -1;
+
+        [SerializeField] private float duration;
+
+        void Start()
+        {
+            currentTime = duration;
+            timeText.text = currentTime.ToString();
+            StartCoroutine(UpdateTime());
+        }
+
+        private IEnumerator UpdateTime()
+        {
+
+            while (currentTime > -1)
+            {
+                timeText.text = currentTime.ToString();
+                yield return new WaitForSeconds(1f);
+                currentTime--;
+            }
+
+            yield return null;
+        }
+
+        public float GetCurrentTime()
+        {
+            return currentTime;
+        }
     }
 }
