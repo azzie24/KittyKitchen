@@ -12,6 +12,12 @@ public class InstructionUI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+
+        // Check if the "E" key is pressed
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            // Call the Hide method to close the UI
+
             Hide();
         }
     }
