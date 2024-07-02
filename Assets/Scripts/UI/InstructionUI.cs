@@ -7,8 +7,7 @@ public class InstructionUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UpdateVisual();
-
+        
         Show();
     }
 
