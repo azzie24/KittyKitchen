@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using Base;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DeliveryResultUI : MonoBehaviour 
+public class DeliveryResultUI : MonoBehaviour
 {
 
 
@@ -22,12 +21,12 @@ public class DeliveryResultUI : MonoBehaviour
 
     private Animator animator;
 
-    private void Awake() 
+    private void Awake()
     {
         animator = GetComponent<Animator>();
     }
 
-    private void Start() 
+    private void Start()
     {
         DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
         DeliveryManager.Instance.OnRecipeFailed += DeliveryManager_OnRecipeFailed;
@@ -35,7 +34,7 @@ public class DeliveryResultUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void DeliveryManager_OnRecipeFailed(object sender, System.EventArgs e) 
+    private void DeliveryManager_OnRecipeFailed(object sender, System.EventArgs e)
     {
         gameObject.SetActive(true);
         animator.SetTrigger(POPUP);
@@ -44,7 +43,7 @@ public class DeliveryResultUI : MonoBehaviour
         messageText.text = "DELIVERY\nFAILED";
     }
 
-    private void DeliveryManager_OnRecipeSuccess(object sender, System.EventArgs e) 
+    private void DeliveryManager_OnRecipeSuccess(object sender, System.EventArgs e)
     {
         gameObject.SetActive(true);
         animator.SetTrigger(POPUP);
