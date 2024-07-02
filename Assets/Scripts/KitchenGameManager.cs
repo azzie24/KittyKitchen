@@ -1,14 +1,11 @@
+using Base;
 using System;
 using UnityEngine;
-
 public class KitchenGameManager : MonoBehaviour
 {
 
 
     public static KitchenGameManager Instance { get; private set; }
-
-
-
     public event EventHandler OnStateChanged;
     public event EventHandler OnGamePaused;
     public event EventHandler OnGameUnpaused;
@@ -26,7 +23,7 @@ public class KitchenGameManager : MonoBehaviour
     private State state;
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
-    private float gamePlayingTimerMax = 30f;
+    private float gamePlayingTimerMax = 3600f;
     private bool isGamePaused = false;
 
 
@@ -74,7 +71,7 @@ public class KitchenGameManager : MonoBehaviour
                 break;
             case State.GamePlaying:
                 gamePlayingTimer -= Time.deltaTime;// there was -
-                if (gamePlayingTimer < 0f)
+                if (gamePlayingTimer < 0f || DeliveryManager.Instance.GetSuccessfulRecipesAmount() == 5)
                 {
                     state = State.GameOver;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);

@@ -2,109 +2,112 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeliveryManager : MonoBehaviour
+namespace Base
 {
-
-
-    public event EventHandler OnRecipeSpawned;
-    public event EventHandler OnRecipeCompleted;
-    public event EventHandler OnRecipeSuccess;
-    public event EventHandler OnRecipeFailed;
-
-
-    public static DeliveryManager Instance { get; private set; }
-
-
-    [SerializeField] private RecipeListSO recipeListSO;
-
-
-    private List<RecipeSO> waitingRecipeSOList;
-    private float spawnRecipeTimer;
-    private float spawnRecipeTimerMax = 4f;
-    private int waitingRecipesMax = 5;
-    private int successfulRecipesAmount;
-
-
-    private void Awake()
+    public class DeliveryManager : MonoBehaviour
     {
-        Instance = this;
 
 
-        waitingRecipeSOList = new List<RecipeSO>();
-    }
+        public event EventHandler OnRecipeSpawned;
+        public event EventHandler OnRecipeCompleted;
+        public event EventHandler OnRecipeSuccess;
+        public event EventHandler OnRecipeFailed;
 
-    private void Update()
-    {
-        spawnRecipeTimer -= Time.deltaTime;
-        if (spawnRecipeTimer <= 0f)
+
+        public static DeliveryManager Instance { get; private set; }
+
+
+        [SerializeField] private RecipeListSO recipeListSO;
+
+
+        private List<RecipeSO> waitingRecipeSOList;
+        private float spawnRecipeTimer;
+        private float spawnRecipeTimerMax = 4f;
+        private int waitingRecipesMax = 5;
+        private int successfulRecipesAmount;
+
+
+        private void Awake()
         {
-            spawnRecipeTimer = spawnRecipeTimerMax;
+            Instance = this;
 
-            if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < waitingRecipesMax)
-            {
-                RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
 
-                waitingRecipeSOList.Add(waitingRecipeSO);
-
-                OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
-
-                waitingRecipesMax--;
-            }
-
+            waitingRecipeSOList = new List<RecipeSO>();
         }
-    }
 
-    public void DeliverRecipe(PlateKitchenObject plateKitchenObject)
-    {
-        for (int i = 0; i < waitingRecipeSOList.Count; i++)
+        private void Update()
         {
-            RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
-
-            if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
+            spawnRecipeTimer -= Time.deltaTime;
+            if (spawnRecipeTimer <= 0f)
             {
-                bool plateContentsMatchesRecipe = true;
-                foreach (KitchenObjectSO recipeKitchenObjectSO in waitingRecipeSO.kitchenObjectSOList)
+                spawnRecipeTimer = spawnRecipeTimerMax;
+
+                if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < waitingRecipesMax)
                 {
-                    bool ingredientFound = false;
-                    foreach (KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
+                    RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
+
+                    waitingRecipeSOList.Add(waitingRecipeSO);
+
+                    OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
+
+                    waitingRecipesMax--;
+                }
+
+            }
+        }
+
+        public void DeliverRecipe(PlateKitchenObject plateKitchenObject)
+        {
+            for (int i = 0; i < waitingRecipeSOList.Count; i++)
+            {
+                RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
+
+                if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
+                {
+                    bool plateContentsMatchesRecipe = true;
+                    foreach (KitchenObjectSO recipeKitchenObjectSO in waitingRecipeSO.kitchenObjectSOList)
                     {
-                        if (plateKitchenObjectSO == recipeKitchenObjectSO)
+                        bool ingredientFound = false;
+                        foreach (KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
                         {
-                            ingredientFound = true;
-                            break;
+                            if (plateKitchenObjectSO == recipeKitchenObjectSO)
+                            {
+                                ingredientFound = true;
+                                break;
+                            }
+                        }
+                        if (!ingredientFound)
+                        {
+                            plateContentsMatchesRecipe = false;
                         }
                     }
-                    if (!ingredientFound)
+
+                    if (plateContentsMatchesRecipe)
                     {
-                        plateContentsMatchesRecipe = false;
+
+                        successfulRecipesAmount++;
+
+                        waitingRecipeSOList.RemoveAt(i);
+
+                        OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
+                        OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+                        return;
                     }
                 }
-
-                if (plateContentsMatchesRecipe)
-                {
-
-                    successfulRecipesAmount++;
-
-                    waitingRecipeSOList.RemoveAt(i);
-
-                    OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
-                    OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
-                    return;
-                }
             }
+
+            OnRecipeFailed?.Invoke(this, EventArgs.Empty);
         }
 
-        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
-    }
+        public List<RecipeSO> GetWaitingRecipeSOList()
+        {
+            return waitingRecipeSOList;
+        }
 
-    public List<RecipeSO> GetWaitingRecipeSOList()
-    {
-        return waitingRecipeSOList;
-    }
+        public int GetSuccessfulRecipesAmount()
+        {
+            return successfulRecipesAmount;
+        }
 
-    public int GetSuccessfulRecipesAmount()
-    {
-        return successfulRecipesAmount;
     }
-
 }
