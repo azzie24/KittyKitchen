@@ -1,8 +1,21 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tim
+
+public class GamePlayingClockUI : MonoBehaviour
+{
+
+
+    [SerializeField] private Text timerText;
+
+
+    private void Update()
+    {
+        timerText.text = KitchenGameManager.Instance.GetGamePlayingTimerNormalized().ToString();
+    }
+}
+
+/*namespace Tim
 {
     public class GamePlayingClockUI : MonoBehaviour
     {
@@ -12,7 +25,7 @@ namespace Tim
 
         [SerializeField] private float duration;
 
-        void Start()
+        void /Start()
         {
             currentTime = duration;
             timeText.text = currentTime.ToString();
@@ -38,3 +51,4 @@ namespace Tim
         }
     }
 }
+*/
